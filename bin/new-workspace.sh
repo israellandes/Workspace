@@ -1,32 +1,11 @@
 #!/bin/bash
 # Create New Folder Directories ( )
-sudo rm -dr ~/new-workspace
 set -e
+# $1 = your_workspace
+# $2 = git_username
+# $3 = your_workspace
 
-edit_git()
-{
-	echo "Directory ~/$1/configs/new-git-repo.sh exists. Creating new repo template"
-	echo "#!/bin/bash" > ~/"$1"/configs/new-git-repo.sh
-	echo "sudo curl -u \"USER\" https://api.github.com/user/repos -d '{\"name\":\"REPO\"}'" >> ~/"$1"/configs/new-git-repo.sh
-	### Remember replace USER with your username and REPO with your repository/application name!
-        echo "cd ~/$3 && sudo git init && echo \"# new-workspace\" >> README.md && sudo git add . && sudo git commit -m \"first commit\" && sudo git remote add origin https://github.com/$2/$3.git" >> ~/"$1"/configs/new-git-repo.sh
-        echo "sudo git config --global --add safe.directory '~/$3' && sudo git push --set-upstream origin master" >> ~/"$1"/configs/new-git-repo.sh 
-	sed -i "2s/USER/"$2"/" ~/"$1"/configs/new-git-repo.sh
-	sed -i "3s/USER/"$2"/" ~/"$1"/configs/new-git-repo.sh
-	sed -i "4s/USER/"$2"/" ~/"$1"/configs/new-git-repo.sh
-	sed -i "3s/$3/"$3"/" ~/"$1"/configs/new-git-repo.sh
-	sed -i "2s/REPO/"$3"/" ~/"$1"/configs/new-git-repo.sh
-	sed -i "3s/REPO/"$3"/" ~/"$1"/configs/new-git-repo.sh
-	sed -i "4s/REPO/"$3"/" ~/"$1"/configs/new-git-repo.sh
-	echo
-	echo "Done"
-	echo
-	chmod 777 ~/"$1"/configs/new-git-repo.sh
-	~/"$1"/configs/new-git-repo.sh
-
-}
-
-new_workspace()
+create_new_workspace()
 {
 
 # This exits script if error code:
@@ -55,21 +34,50 @@ else
     cd ~/$1 && pwd
     ls ~/"$1"/
     echo
-    edit_git "$workspace" "$user" "$workspace"
     echo "Directory ~/$1/ now exists. Done and exiting..."
     return 0
 fi
 }
 
-
-new_git()
+create_and_add_new_git_repo()
 {
-result=${PWD##*/}
-sudo curl -u "$1" https://api.github.com/user/repos -d '{"name":"$2"}'
-### Remember replace USER with your username and REPO with your repository/application name!
-sudo git remote add origin "git@github.com:"$1"/"$2".git"
-sudo git push origin master
-# Pass Username, and email to connect to git
+	create_and_add_new_git_repo "$1" "$2" "$3"
+
+	echo "Directory ~/$1/configs/new-git-repo.sh exists. Creating new repo template"
+	echo "#!/bin/bash" > ~/"$1"/configs/new-git-repo.sh
+	echo "sudo curl -u \"USER\" https://api.github.com/user/repos -d '{\"name\":\"REPO\"}'" >> ~/"$1"/configs/new-git-repo.sh
+	### Remember replace USER with your username and REPO with your repository/application name!
+        echo "cd ~/$3 && sudo git init && echo \"# new-workspace\" >> README.md && sudo git add . && sudo git commit -m \"first commit\" && sudo git remote add origin https://github.com/$2/$3.git" >> ~/"$1"/configs/new-git-repo.sh
+        echo "sudo git config --global --add safe.directory '~/$3' && sudo git push --set-upstream origin master" >> ~/"$1"/configs/new-git-repo.sh 
+	sed -i "2s/USER/"$2"/" ~/"$1"/configs/new-git-repo.sh
+	sed -i "3s/USER/"$2"/" ~/"$1"/configs/new-git-repo.sh
+	sed -i "4s/USER/"$2"/" ~/"$1"/configs/new-git-repo.sh
+	sed -i "3s/$3/"$3"/" ~/"$1"/configs/new-git-repo.sh
+	sed -i "2s/REPO/"$3"/" ~/"$1"/configs/new-git-repo.sh
+	sed -i "3s/REPO/"$3"/" ~/"$1"/configs/new-git-repo.sh
+	sed -i "4s/REPO/"$3"/" ~/"$1"/configs/new-git-repo.sh
+	echo
+	echo "Done"
+	echo
+	chmod 777 ~/"$1"/configs/new-git-repo.sh
+	~/"$1"/configs/new-git-repo.sh
+
+}
+
+# Pass in your directory, must be in user home.
+save_workspace_to_git()
+{
+result=$1
+cd ~/$1
+sudo git add .
+
+# date command, current date and time
+DATE=$(date)
+sudo git commit -m "changes made on $DATE"
+sudo git push
+
+# MAC AUtotmation - Notifications
+osascript -e "display notification 'pushed to remote' with title 'SUCESS'"
 #
 #git_user=$1
 #git_email=$2
@@ -107,5 +115,4 @@ else
 fi
 
 }
-
-new_workspace $1 $2 $3
+save_workspace_to_git $1 $2 $3
