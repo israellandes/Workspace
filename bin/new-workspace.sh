@@ -39,8 +39,27 @@ fi
 }
 
 
+new_git()
+{
+# Pass Username, and email to connect to git
+
+git_user=$1
+git_email=$2
+# sudo git config --global user.name "$1"
+# sudo git config --global user.email "$2"
+# sudo git commit --amend --reset-author
+result=${PWD##*/} 
+echo "# update" >> README.md
+sudo git init .
+sudo git add .
+sudo git commit -m "commit"
+sudo git branch -M main
+sudo git remote add origin https://github.com/$git_user/$result/.git > /dev/null 2>&1
+sudo git push -u origin main
 
 
+
+}
 
 new_git_repo()
 {
@@ -59,4 +78,4 @@ fi
 
 }
 
-new_git_repo
+new_git $1 $2
