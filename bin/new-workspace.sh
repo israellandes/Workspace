@@ -9,12 +9,15 @@ edit_git()
 	echo "#!/bin/bash" > ~/"$1"/configs/new-git-repo.sh
 	echo "sudo curl -u \"USER\" https://api.github.com/user/repos -d '{\"name\":\"REPO\"}'" >> ~/"$1"/configs/new-git-repo.sh
 	### Remember replace USER with your username and REPO with your repository/application name!
-	echo "sudo git remote add origin git@github.com:USER/REPO.git" >> ~/"$1"/configs/new-git-repo.sh
-	echo "sudo git push origin master" >> ~/"$1"/configs/new-git-repo.sh 
+        echo "cd ~/$3 && sudo git init && echo \"# new-workspace\" >> README.md && sudo git add . && sudo git commit -m \"first commit\" && sudo git remote add origin https://github.com/$2/$3.git" >> ~/"$1"/configs/new-git-repo.sh
+        echo "sudo git config --global --add safe.directory '~/$3' && sudo git push --set-upstream origin master" >> ~/"$1"/configs/new-git-repo.sh 
 	sed -i "2s/USER/"$2"/" ~/"$1"/configs/new-git-repo.sh
 	sed -i "3s/USER/"$2"/" ~/"$1"/configs/new-git-repo.sh
+	sed -i "4s/USER/"$2"/" ~/"$1"/configs/new-git-repo.sh
+	sed -i "3s/$3/"$3"/" ~/"$1"/configs/new-git-repo.sh
 	sed -i "2s/REPO/"$3"/" ~/"$1"/configs/new-git-repo.sh
 	sed -i "3s/REPO/"$3"/" ~/"$1"/configs/new-git-repo.sh
+	sed -i "4s/REPO/"$3"/" ~/"$1"/configs/new-git-repo.sh
 	echo
 	echo "Done"
 	echo
