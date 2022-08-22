@@ -49,11 +49,11 @@ git_email=$2
 # sudo git config --global user.email "$2"
 # sudo git commit --amend --reset-author
 result=${PWD##*/} 
-echo "# update" >> README.md
-sudo git init .
-sudo git add .
-sudo git commit -m "commit"
-sudo git branch -M main
+echo "# update" >> README.md &&\
+sudo git init . &&\
+sudo git add . &&\
+sudo git commit -m "commit" &&\
+sudo git branch -M main &&\
 sudo git remote add origin https://github.com/$git_user/$result/.git &
 sudo git push -u origin main
 }
