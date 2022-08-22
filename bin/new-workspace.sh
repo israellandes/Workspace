@@ -54,7 +54,7 @@ sudo git init .
 sudo git add .
 sudo git commit -m "commit"
 sudo git branch -M main
-sudo git remote add origin https://github.com/$git_user/$result/.git
+sudo git remote add origin https://github.com/$git_user/$result/.git &
 sudo git push -u origin main
 }
 
